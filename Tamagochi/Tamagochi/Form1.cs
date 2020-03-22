@@ -84,7 +84,7 @@ namespace Tamagochi
         {
             lblClearCur.Text = Settings.clear.current_value.ToString();
             lblEatCur.Text = Settings.eat.current_value.ToString();
-            lblSleep.Text = Settings.sleep.current_value.ToString();
+            lblSleepCur.Text = Settings.sleep.current_value.ToString();
             lblHPCur.Text = Settings.HP.current_value.ToString();
             lblHappyCur.Text = Settings.happy.current_value.ToString();
         }
