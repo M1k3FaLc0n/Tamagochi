@@ -12,129 +12,285 @@ namespace Tamagochi
 {
     public partial class Form1 : Form
     {
+        public PictureBox[] queue;
         public Form1()
         {
             InitializeComponent();
 
+            new Settings();
+
+            queue = new PictureBox[] { pbQueue1, pbQueue2,pbQueue3,pbQueue4,pbQueue5,pbQueue6};
+            
+            gameTimer.Interval = 1000 / Settings.speed;
+            gameTimer.Tick += UpdateScreen;
+            gameTimer.Start();
+
+            queueTimer.Interval = 1000 / Settings.queue_speed;
+            queueTimer.Tick += UpdateQueue;
+            queueTimer.Start();
+
             init_game();
+        }
+
+        public void UpdateQueue(object sender, EventArgs e)
+        {
+            show_commands();
+        }
+
+        public void show_commands()
+        {
+            for(int i =0; i < queue.Length; i++)
+            {
+                if(Settings.commands.Elements[i] != null)
+                {
+                    KeyValuePair<Actions, Image> cur_elem =
+                        (KeyValuePair<Actions,Image>)Settings.commands.Elements[i];
+                    queue[i].Image = cur_elem.Value;
+                    queue[i].SizeMode = PictureBoxSizeMode.Zoom;
+                }
+                else
+                {
+                    queue[i].Image = null;
+                }
+            }
+        }
+
+        public void action()
+        {
+            KeyValuePair<Actions, Image>? cur_elem = Settings.commands.Dequeue();
+            if (cur_elem == null)
+            {
+                return;
+            }
+
+            KeyValuePair<Actions, Image> cur_elem_new = (KeyValuePair<Actions, Image>)cur_elem;
+
+            switch( cur_elem_new.Key)
+            {
+                case Actions.Eat:
+                    eating();
+                    break;
+                case Actions.Clear:
+                    showering();
+                    break;
+                case Actions.Game:
+                    gameing();
+                    break;
+                case Actions.Sleep:
+                    sleeping();
+                    break;
+            }
+
+            set_scales();
+            Settings.is_game_over = is_die();
+        }
+
+        private void UpdateScreen(object sender, EventArgs e)
+        {
+            if (Settings.is_game_over)
+            {
+                game_over_actions();
+            }
+            else
+            {
+           Random random = new Random();
+                int is_action = random.Next(0,2);
+                if(is_action == 1)
+                {
+                    generate_action(random);
+                }
+            }
+        }
+
+        private void generate_action(Random random)
+        {
+            List<Action> actions = new List<Action>() { dec_eat, dec_sleep, dec_happy, dec_clear };
+            int index = random.Next(0,actions.Count);
+            actions[index]();
+
+        }
+
+        private void dec_eat()
+        {
+            Settings.eat.current_value -= Settings.default_dif;
+            set_scales();
+            Settings.is_game_over = is_die();
+        }
+
+        private void dec_sleep()
+        {
+            Settings.sleep.current_value -= Settings.default_dif;
+            set_scales();
+            Settings.is_game_over = is_die();
+        }
+
+        private void dec_happy()
+        {
+            Settings.happy.current_value -= Settings.default_dif;
+            set_scales();
+            Settings.is_game_over = is_die();
+        }
+
+        private void dec_clear()
+        {
+            Settings.clear.current_value -= Settings.default_dif;
+            set_scales();
+            Settings.is_game_over = is_die();
         }
 
         private void init_game()
         {
             new Settings();
             init_scale(lblEatCur, lblEatMax, Settings.eat);
-            init_scale(lblClearCur, lblClearMax, Settings.clear);
-            init_scale(lblHappyCur, lblHappyMax, Settings.happy);
-            init_scale(lblHPCur, lblHPMax, Settings.HP);
             init_scale(lblSleepCur, lblSleepMax, Settings.sleep);
+            init_scale(lblHappyCur, lblHappyMax, Settings.happy);
+            init_scale(lblClearCur, lblClearMax, Settings.clear);
+            init_scale(lblHPCur, lblHPMax, Settings.HP);
 
             lblGameOver.Visible = false;
         }
 
-
-        private void init_scale(Label lbl_cur, Label lbl_max, Scale scale)
+        private void init_scale(Label lbl_cur, Label lbl_max, 
+            Scale scale)
         {
             lbl_cur.Text = scale.current_value.ToString();
             lbl_max.Text = scale.max_value.ToString();
         }
 
-
-        private Scale add_value(int add_value, Scale scale)
+        private Scale add_value(int add_value, Scale cur_scale)
         {
-            scale.current_value += add_value;
-            if (scale.current_value > scale.max_value)
+            cur_scale.current_value += add_value;
+            if (cur_scale.current_value > cur_scale.max_value)
             {
-                scale.current_value = scale.max_value;
+                cur_scale.current_value = cur_scale.max_value;
             }
-            return scale;
+            return cur_scale;
         }
 
-        private Scale dif_value(int dif_value, Scale scale)
+        private Scale dif_value(int dif_value, Scale cur_scale)
         {
-            scale.current_value -= dif_value;
-            if (scale.current_value < 0)
+            cur_scale.current_value -= dif_value;
+            if (cur_scale.current_value < 0)
             {
-                scale.current_value = 0;
+                cur_scale.current_value = 0;
             }
-            return scale;
+            return cur_scale;
         }
 
         private bool is_die()
         {
-            int cur_life = (int)(0.25 * Settings.eat.current_value +
-                0.25 * Settings.sleep.current_value +
-                0.25 * Settings.clear.current_value +
-                0.25 * Settings.happy.current_value);
-
+            int cur_life = (int)(0.25 * Settings.eat.current_value 
+                + 0.25 * Settings.sleep.current_value 
+                + 0.25 * Settings.happy.current_value 
+                + 0.25 * Settings.clear.current_value);
             Settings.HP.current_value = cur_life;
-
-            if (Settings.HP.current_value == 0
-                || Settings.eat.current_value == 0
-                || Settings.clear.current_value == 0
-                || Settings.happy.current_value == 0
-                || Settings.sleep.current_value == 0)
+            if (Settings.HP.current_value == 0 
+                || Settings.sleep.current_value == 0 
+                || Settings.happy.current_value == 0 
+                || Settings.clear.current_value == 0 
+                || Settings.eat.current_value == 0)
             {
                 return true;
             }
-
             return false;
         }
 
         private void set_scales()
         {
-            lblClearCur.Text = Settings.clear.current_value.ToString();
             lblEatCur.Text = Settings.eat.current_value.ToString();
             lblSleepCur.Text = Settings.sleep.current_value.ToString();
-            lblHPCur.Text = Settings.HP.current_value.ToString();
             lblHappyCur.Text = Settings.happy.current_value.ToString();
+            lblClearCur.Text = Settings.clear.current_value.ToString();
+            lblHPCur.Text = Settings.HP.current_value.ToString();
         }
 
-        private bool eating() {
+        public void eating()
+        {
             Settings.eat = add_value(Settings.add, Settings.eat);
-            Settings.happy = add_value(Settings.add, Settings.happy);
             Settings.clear = dif_value(Settings.dif, Settings.clear);
             Settings.sleep = dif_value(Settings.dif, Settings.sleep);
-            
-            //bool is_dead = is_die();
-            //return is_dead;
-
-            return is_die();
         }
 
         private void game_over_actions()
         {
             pbImage.BackgroundImage = Properties.Resources.die;
             lblGameOver.Visible = true;
-            btnClear.Enabled = false;
             btnEat.Enabled = false;
-            btnHappy.Enabled = false;
             btnSleep.Enabled = false;
+            btnHappy.Enabled = false;
+            btnClear.Enabled = false;
+            btnAction.Enabled = false;
         }
 
         private void btnEat_Click(object sender, EventArgs e)
         {
-            bool is_die = eating();
+            Settings.commands.Enqueue(
+                new KeyValuePair<Actions, Image>(Actions.Eat, Properties.Resources._7));
+            /*
+            eating();
             set_scales();
-            if (is_die)
-            {
-                game_over_actions();
-            }
+            Settings.is_game_over = is_die();
+            */
         }
 
+        public void sleeping()
+        {
+            Settings.sleep = add_value(Settings.add, Settings.sleep);
+            Settings.happy = add_value(Settings.add, Settings.happy);
+            Settings.clear = dif_value(Settings.dif, Settings.clear);
+            Settings.eat = dif_value(Settings.dif, Settings.eat);
+        }
+
+        public void gameing()
+        {
+            Settings.happy = add_value(Settings.add, Settings.happy);
+            Settings.sleep = dif_value(Settings.dif, Settings.sleep);
+            Settings.eat = dif_value(Settings.dif, Settings.eat);
+            Settings.clear = dif_value(Settings.dif, Settings.clear);
+        }
+
+        public void showering()
+        {
+            Settings.clear = add_value(Settings.add, Settings.clear);
+            Settings.sleep = dif_value(Settings.dif, Settings.sleep);
+            Settings.happy = dif_value(Settings.dif, Settings.happy);
+            Settings.eat = dif_value(Settings.dif, Settings.eat);
+        }
 
         private void btnSleep_Click(object sender, EventArgs e)
         {
-  
+            Settings.commands.Enqueue(
+                new KeyValuePair<Actions, Image>(Actions.Sleep, Properties.Resources._8));
+            /*
+            sleeping();
+            set_scales();
+            Settings.is_game_over = is_die();
+            */
         }
 
         private void btnHappy_Click(object sender, EventArgs e)
         {
-  
+            Settings.commands.Enqueue(
+                new KeyValuePair<Actions, Image>(Actions.Game, Properties.Resources._9));
+            /*gameing();
+            set_scales();
+            Settings.is_game_over = is_die();
+            */
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            Settings.commands.Enqueue(
+                new KeyValuePair<Actions, Image>(Actions.Clear, Properties.Resources._10));
+            /*showering();
+            set_scales();
+            Settings.is_game_over = is_die();
+            */
+        }
 
+        private void btnAction_Click(object sender, EventArgs e)
+        {
+            action();
         }
     }
 }
