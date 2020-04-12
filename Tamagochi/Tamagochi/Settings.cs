@@ -31,7 +31,10 @@ namespace Tamagochi
 
         public static MyQueue commands;
         public static int queue_speed;
-        
+
+        public static MyStack stack_commands;
+        public static int stack_speed;
+           
 
         public Settings()
         {
@@ -51,6 +54,9 @@ namespace Tamagochi
 
             commands = new MyQueue();
             queue_speed = 16;
+
+            stack_commands = new MyStack();
+            stack_speed = 16;
         }
     }
 }

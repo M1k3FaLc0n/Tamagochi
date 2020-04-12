@@ -60,6 +60,15 @@
             this.btnAction = new System.Windows.Forms.Button();
             this.queueTimer = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pbStack1 = new System.Windows.Forms.PictureBox();
+            this.pbStack2 = new System.Windows.Forms.PictureBox();
+            this.pbStack3 = new System.Windows.Forms.PictureBox();
+            this.pbStack4 = new System.Windows.Forms.PictureBox();
+            this.pbStack5 = new System.Windows.Forms.PictureBox();
+            this.pbStack6 = new System.Windows.Forms.PictureBox();
+            this.btnStackAction = new System.Windows.Forms.Button();
+            this.stackTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.lblHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblClear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblHappy)).BeginInit();
@@ -72,6 +81,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack6)).BeginInit();
             this.SuspendLayout();
             // 
             // lblEatCur
@@ -383,23 +398,101 @@
             this.label1.TabIndex = 15;
             this.label1.Text = "Очередь";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(880, 81);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(50, 20);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Стек";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // pbStack1
+            // 
+            this.pbStack1.Location = new System.Drawing.Point(884, 119);
+            this.pbStack1.Name = "pbStack1";
+            this.pbStack1.Size = new System.Drawing.Size(50, 50);
+            this.pbStack1.TabIndex = 21;
+            this.pbStack1.TabStop = false;
+            // 
+            // pbStack2
+            // 
+            this.pbStack2.Location = new System.Drawing.Point(884, 175);
+            this.pbStack2.Name = "pbStack2";
+            this.pbStack2.Size = new System.Drawing.Size(50, 50);
+            this.pbStack2.TabIndex = 21;
+            this.pbStack2.TabStop = false;
+            // 
+            // pbStack3
+            // 
+            this.pbStack3.Location = new System.Drawing.Point(884, 231);
+            this.pbStack3.Name = "pbStack3";
+            this.pbStack3.Size = new System.Drawing.Size(50, 50);
+            this.pbStack3.TabIndex = 21;
+            this.pbStack3.TabStop = false;
+            // 
+            // pbStack4
+            // 
+            this.pbStack4.Location = new System.Drawing.Point(884, 287);
+            this.pbStack4.Name = "pbStack4";
+            this.pbStack4.Size = new System.Drawing.Size(50, 50);
+            this.pbStack4.TabIndex = 21;
+            this.pbStack4.TabStop = false;
+            // 
+            // pbStack5
+            // 
+            this.pbStack5.Location = new System.Drawing.Point(884, 343);
+            this.pbStack5.Name = "pbStack5";
+            this.pbStack5.Size = new System.Drawing.Size(50, 50);
+            this.pbStack5.TabIndex = 21;
+            this.pbStack5.TabStop = false;
+            // 
+            // pbStack6
+            // 
+            this.pbStack6.Location = new System.Drawing.Point(884, 399);
+            this.pbStack6.Name = "pbStack6";
+            this.pbStack6.Size = new System.Drawing.Size(50, 50);
+            this.pbStack6.TabIndex = 21;
+            this.pbStack6.TabStop = false;
+            // 
+            // btnStackAction
+            // 
+            this.btnStackAction.Location = new System.Drawing.Point(872, 479);
+            this.btnStackAction.Name = "btnStackAction";
+            this.btnStackAction.Size = new System.Drawing.Size(75, 23);
+            this.btnStackAction.TabIndex = 22;
+            this.btnStackAction.Text = "DO IT!";
+            this.btnStackAction.UseVisualStyleBackColor = true;
+            this.btnStackAction.Click += new System.EventHandler(this.btnStackAction_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ClientSize = new System.Drawing.Size(860, 542);
+            this.ClientSize = new System.Drawing.Size(971, 542);
+            this.Controls.Add(this.btnStackAction);
+            this.Controls.Add(this.pbStack6);
             this.Controls.Add(this.btnAction);
+            this.Controls.Add(this.pbStack5);
             this.Controls.Add(this.pbQueue6);
+            this.Controls.Add(this.pbStack4);
             this.Controls.Add(this.pbQueue5);
+            this.Controls.Add(this.pbStack3);
             this.Controls.Add(this.pbQueue4);
+            this.Controls.Add(this.pbStack2);
             this.Controls.Add(this.pbQueue3);
+            this.Controls.Add(this.pbStack1);
             this.Controls.Add(this.pbQueue2);
             this.Controls.Add(this.pbQueue1);
             this.Controls.Add(this.lblGameOver);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHappy);
             this.Controls.Add(this.btnSleep);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnEat);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblHPMax);
@@ -433,6 +526,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbQueue6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStack6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -471,6 +570,15 @@
         private System.Windows.Forms.Button btnAction;
         private System.Windows.Forms.Timer queueTimer;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pbStack1;
+        private System.Windows.Forms.PictureBox pbStack2;
+        private System.Windows.Forms.PictureBox pbStack3;
+        private System.Windows.Forms.PictureBox pbStack4;
+        private System.Windows.Forms.PictureBox pbStack5;
+        private System.Windows.Forms.PictureBox pbStack6;
+        private System.Windows.Forms.Button btnStackAction;
+        private System.Windows.Forms.Timer stackTimer;
     }
 }
 

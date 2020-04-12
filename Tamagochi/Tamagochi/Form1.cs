@@ -12,7 +12,9 @@ namespace Tamagochi
 {
     public partial class Form1 : Form
     {
-        public PictureBox[] queue;
+        private PictureBox[] queue;
+        private PictureBox[] stack;
+
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +22,7 @@ namespace Tamagochi
             new Settings();
 
             queue = new PictureBox[] { pbQueue1, pbQueue2,pbQueue3,pbQueue4,pbQueue5,pbQueue6};
+            stack = new PictureBox[] { pbStack1, pbStack2, pbStack3, pbStack4, pbStack5, pbStack6 };
             
             gameTimer.Interval = 1000 / Settings.speed;
             gameTimer.Tick += UpdateScreen;
@@ -29,7 +32,60 @@ namespace Tamagochi
             queueTimer.Tick += UpdateQueue;
             queueTimer.Start();
 
+            stackTimer.Interval = 1000 / Settings.stack_speed;
+            stackTimer.Tick += UpdateStack;
+            stackTimer.Start();
+            
             init_game();
+        }
+
+        public void UpdateStack(object sender, EventArgs e)
+        {
+            show_stack_commands();
+        }
+        public void show_stack_commands()
+        {
+            for(int i=0; i < stack.Length; i++)
+            {
+                if (Settings.stack_commands.Elements[i] != null)
+                {
+                    KeyValuePair<Actions, Image> cur_elem =
+                        (KeyValuePair<Actions, Image>)Settings.stack_commands.Elements[i];
+                    stack[i].Image = cur_elem.Value;
+                    stack[i].SizeMode = PictureBoxSizeMode.Zoom;
+                }
+                else
+                {
+                    stack[i].Image = null;
+                }
+            }
+        }
+        public void stack_action()
+        {
+            KeyValuePair<Actions, Image>? cur_elem = Settings.stack_commands.Pop();
+            if (cur_elem == null) { return; }
+
+            KeyValuePair<Actions, Image> cur_elem_new =
+                (KeyValuePair<Actions, Image>)cur_elem;
+
+            switch(cur_elem_new.Key)
+            {
+                case Actions.Eat:
+                    eating();
+                break;
+                case Actions.Clear:
+                    showering();
+                break;
+                case Actions.Game:
+                    gameing();
+                break;
+                case Actions.Sleep:
+                    sleeping();
+                break;
+            }
+
+            set_scales();
+            Settings.is_game_over = is_die();
         }
 
         public void UpdateQueue(object sender, EventArgs e)
@@ -220,18 +276,10 @@ namespace Tamagochi
             btnHappy.Enabled = false;
             btnClear.Enabled = false;
             btnAction.Enabled = false;
+            btnStackAction.Enabled = false;
         }
 
-        private void btnEat_Click(object sender, EventArgs e)
-        {
-            Settings.commands.Enqueue(
-                new KeyValuePair<Actions, Image>(Actions.Eat, Properties.Resources._7));
-            /*
-            eating();
-            set_scales();
-            Settings.is_game_over = is_die();
-            */
-        }
+        
 
         public void sleeping()
         {
@@ -257,10 +305,43 @@ namespace Tamagochi
             Settings.eat = dif_value(Settings.dif, Settings.eat);
         }
 
+        private void btnEat_Click(object sender, EventArgs e)
+        {
+            Random random = new Random();
+            int cur_value = random.Next(0,2);
+            if(cur_value == 0)
+            {
+                Settings.commands.Enqueue(
+                new KeyValuePair<Actions, Image>(Actions.Eat, Properties.Resources._7));
+            }
+            else
+            {
+                Settings.stack_commands.Push(
+                    new KeyValuePair<Actions, Image>(Actions.Eat, Properties.Resources._7));
+            }
+            
+            /*
+            eating();
+            set_scales();
+            Settings.is_game_over = is_die();
+            */
+        }
+
         private void btnSleep_Click(object sender, EventArgs e)
         {
-            Settings.commands.Enqueue(
+            Random random = new Random();
+            int cur_value = random.Next(0, 2);
+            if (cur_value == 0)
+            {
+                Settings.commands.Enqueue(
                 new KeyValuePair<Actions, Image>(Actions.Sleep, Properties.Resources._8));
+            }
+            else
+            {
+                Settings.stack_commands.Push(
+                    new KeyValuePair<Actions, Image>(Actions.Sleep, Properties.Resources._8));
+            }
+            
             /*
             sleeping();
             set_scales();
@@ -270,8 +351,19 @@ namespace Tamagochi
 
         private void btnHappy_Click(object sender, EventArgs e)
         {
-            Settings.commands.Enqueue(
+            Random random = new Random();
+            int cur_value = random.Next(0, 2);
+            if (cur_value == 0)
+            {
+                Settings.commands.Enqueue(
                 new KeyValuePair<Actions, Image>(Actions.Game, Properties.Resources._9));
+            }
+            else
+            {
+                Settings.stack_commands.Push(
+                    new KeyValuePair<Actions, Image>(Actions.Game, Properties.Resources._9));
+            }
+
             /*gameing();
             set_scales();
             Settings.is_game_over = is_die();
@@ -280,8 +372,19 @@ namespace Tamagochi
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            Settings.commands.Enqueue(
+            Random random = new Random();
+            int cur_value = random.Next(0, 2);
+            if (cur_value == 0)
+            {
+                Settings.commands.Enqueue(
                 new KeyValuePair<Actions, Image>(Actions.Clear, Properties.Resources._10));
+            }
+            else
+            {
+                Settings.stack_commands.Push(
+                    new KeyValuePair<Actions, Image>(Actions.Clear, Properties.Resources._10));
+            }
+
             /*showering();
             set_scales();
             Settings.is_game_over = is_die();
@@ -291,6 +394,16 @@ namespace Tamagochi
         private void btnAction_Click(object sender, EventArgs e)
         {
             action();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnStackAction_Click(object sender, EventArgs e)
+        {
+            stack_action();
         }
     }
 }
